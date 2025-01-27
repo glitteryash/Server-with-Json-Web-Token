@@ -57,7 +57,7 @@ userSchema.methods.comparePassword = async function (password, cb) {
     if (err) {
       return cb(err);
     }
-    cb(bnull, isMAtch);
+    cb(bnull, isMatch);
   });
 };
 
