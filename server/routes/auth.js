@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const registerValidation = require("../validation").registerValidation;
+const loginValidation = require("../validation").loginValidation;
 const User = require("../models").userModel;
+const jwt = require("jsonwebtoken");
 
 router.use((req, res, next) => {
   console.log("A request is coming in to /auth");
@@ -12,6 +14,7 @@ router.get("/testAPI", (req, res) => {
   return res.json(msgObj);
 });
 
+//register
 router.post("/register", async (req, res) => {
   console.log("register route is working");
   const { error } = registerValidation(req.body);
@@ -33,7 +36,58 @@ router.post("/register", async (req, res) => {
       data: savedUser,
     });
   } catch (err) {
-    res.status(400).send("User could not be saved", err);
+    res
+      .status(400)
+      .send({ msg: "User could not be saved", error: err.message });
+  }
+});
+
+// login
+// router.post("/login", (req, res) => {
+//   const { error } = loginValidation(req.body);
+//   if (error) return res.status(400).send(error.details[0].message);
+//   User.findOne({ email: req.body.email }, function (err, user) {
+//     if (err) {
+//       res.status(400).send(err);
+//     }
+//     if (!user) {
+//       res.status(401).send("User not found");
+//     } else {
+//       user.comparePassword(req.body.password, function (err, isMatch) {
+//         if (err) return res.status(400).send(err);
+//         if (isMatch) {
+//           const tokenObject = {
+//             _id: user._id,
+//             email: user.email,
+//           };
+//           const token = jwt.sign(tokenObject, process.env.PASSPORT_SECRET);
+//           res.send({ sucess: true, token: "JWT " + token, user });
+//         } else {
+//           res.status(401).send("Authentication failed");
+//         }
+//       });
+//     }
+//   });
+// });
+
+router.post("/login", async (req, res) => {
+  try {
+    const { error } = loginValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send("User not found");
+
+    const isMatch = await user.comparePassword(req.body.password);
+    if (isMatch) {
+      const tokenObject = { _id: user._id, email: user.email };
+      const token = jwt.sign(tokenObject, process.env.PASSPORT_SECRET);
+      return res.send({ success: true, token: "JWT " + token, user });
+    } else {
+      return res.status(401).send("Authentication failed");
+    }
+  } catch (err) {
+    return res.status(400).send(err);
   }
 });
 
