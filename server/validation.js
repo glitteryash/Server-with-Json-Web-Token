@@ -19,7 +19,16 @@ const loginValidation = (data) => {
   return schema.validate(data);
 };
 
+const courseValidation = (data) => {
+  const schema = Joi.object({
+    title: Joi.string().required().min(2).max(50),
+    description: Joi.string().required().min(2).max(50),
+    price: Joi.number().required().min(1).max(9999),
+  });
+};
+
 module.exports = {
   registerValidation,
   loginValidation,
+  courseValidation,
 };
