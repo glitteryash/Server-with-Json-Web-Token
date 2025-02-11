@@ -25,6 +25,7 @@ const courseValidation = (data) => {
     description: Joi.string().required().min(2).max(50),
     price: Joi.number().required().min(1).max(9999),
   });
+  return schema.validate(data);
 };
 
 module.exports = {

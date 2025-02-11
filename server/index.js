@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const authRoute = require("./routes/index").auth;
+const authRoute = require("./routes").auth;
+const courseRoute = require("./routes").course;
+
 dotenv.config();
 const passport = require("passport");
 require("./config/passport")(passport);
@@ -23,6 +25,11 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", authRoute);
+app.use(
+  "/api/courses",
+  passport.authenticate("jwt", { session: false }),
+  courseRoute
+);
 
 app.get("/", (req, res) => {
   res.send("homepage");
