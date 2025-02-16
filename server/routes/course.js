@@ -100,4 +100,28 @@ router.patch("/:_id", async (req, res) => {
   }
 });
 
+router.delete("/:_id", async (req, res) => {
+  try {
+    let { _id } = req.params;
+    const course = await Course.findOne({ _id });
+    if (!course)
+      return res.status(404).json({ success: false, msg: "Course not found" });
+
+    if (course.instructor.equals(req.user._id) || req.user.isAdmin()) {
+      await Course.deleteOne({ _id });
+      res.status(200).json({
+        success: true,
+        msg: "The course has been deleted",
+      });
+    } else {
+      return res.status(403).json({
+        success: false,
+        msg: "Only the instructor of this course or admin can delete",
+      });
+    }
+  } catch (err) {
+    res.status(400).send({ msg: "delete unsuccessful", error: err.message });
+  }
+});
+
 module.exports = router;
