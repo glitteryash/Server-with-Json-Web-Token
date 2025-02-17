@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const authRoute = require("./routes").auth;
 const courseRoute = require("./routes").course;
+const cors = require("cors");
 
 dotenv.config();
 const passport = require("passport");
@@ -24,6 +25,9 @@ mongoose
 //middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+//cors middleware,一定要放在路由之前
+app.use(cors());
+
 app.use("/api/user", authRoute);
 app.use(
   "/api/courses",
