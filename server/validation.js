@@ -7,6 +7,12 @@ const registerValidation = (data) => {
     email: Joi.string().min(6).max(50).required().email(),
     password: Joi.string().min(6).max(1024).required(),
     role: Joi.string().required().valid("student", "instructor"),
+  }).messages({
+    "any.require": "{#label}は必須項目です。",
+    "string.email": "有効な{#label}をご入力ください。",
+    "string.min": "{#label}は{#limit}文字以上です。",
+    "string.max": "{#label}は{#limit}文字以内です。",
+    "any.only": "{#label}はStudentまたはInstructorでなければなりません。",
   });
   return schema.validate(data);
 };
@@ -15,6 +21,11 @@ const loginValidation = (data) => {
   const schema = Joi.object({
     email: Joi.string().min(6).max(50).required().email(),
     password: Joi.string().min(6).max(1024).required(),
+  }).messages({
+    "any.require": "{#label}は必須項目です。",
+    "string.email": "有効な{#label}をご入力ください。",
+    "string.min": "{#label}は{#limit}文字以上です。",
+    "string.max": "{#label}は{#limit}文字以内です。",
   });
   return schema.validate(data);
 };
@@ -24,6 +35,13 @@ const courseValidation = (data) => {
     title: Joi.string().required().min(2).max(50),
     description: Joi.string().required().min(2).max(50),
     price: Joi.number().required().min(1).max(9999),
+  }).messages({
+    "any.require": "{#label}は必須項目です。",
+    "string.min": "{#label}は{#limit}文字以上です。",
+    "string.max": "{#label}は{#limit}文字以内です。",
+    "number.base": "{#label}は必ず数字でなければなりません。",
+    "number.min": "{#label}は{#limit}円以上です。",
+    "number.max": "{#label}は{#limit}円以内です。",
   });
   return schema.validate(data);
 };

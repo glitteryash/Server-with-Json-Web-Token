@@ -6,7 +6,8 @@ const Register = () => {
   let [username, setUsername] = useState("");
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
-  let [role, setRole] = useState("");
+  let [role, setRole] = useState("student");
+  let [message, setMessage] = useState(""); //顯示Error Message
   const navigate = useNavigate(); //React Router v5 用useHistory()
 
   const handleChangeUsername = (e) => {
@@ -29,18 +30,21 @@ const Register = () => {
         navigate("/login");
       })
       .catch((error) => {
-        console.log("error:", error.response);
+        console.error("Error:", error.response);
+        setMessage(error.response.data);
       });
   };
 
   return (
     <div style={{ padding: "3rem" }} className="col-md-12">
       <div>
+        {message && <div className="alert alert-danger">{message}</div>}
         <div>
           <label htmlFor="username">Username</label>
           <input
             onChange={handleChangeUsername}
             type="text"
+            value={username}
             className="form-control"
             name="username"
             id="username"
@@ -52,6 +56,7 @@ const Register = () => {
           <input
             onChange={handleChangeEmail}
             type="text"
+            value={email}
             className="form-control"
             name="email"
             id="email"
@@ -63,6 +68,7 @@ const Register = () => {
           <input
             onChange={handleChangePassword}
             type="password"
+            value={password}
             className="form-control"
             name="password"
             id="password"
@@ -71,13 +77,16 @@ const Register = () => {
         <br />
         <div className="form-group">
           <label htmlFor="role">Role</label>
-          <input
+          <select
             onChange={handleChangeRole}
-            type="text"
+            value={role}
             className="form-control"
             name="role"
             id="role"
-          />
+          >
+            <option value="student">Student</option>
+            <option value="instructor">Instructor</option>
+          </select>
         </div>
         <br />
         <button onClick={handleRegister} className="btn btn-primary">
