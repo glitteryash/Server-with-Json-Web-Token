@@ -17,15 +17,34 @@ const Login = () => {
   const handleLogin = () => {
     AuthService.login(email, password)
       .then((response) => {
-        console.log("Login success", response);
-        window.alert("Login success! Redirect to the homepage");
-        navigate("/");
+        if (response.data.token) {
+          console.log("Login success", response);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              email: response.data.user.email,
+              username: response.data.user.username,
+              _id: response.data.user._id,
+            })
+          );
+          localStorage.setItem("token", response.data.token);
+          window.alert("Login success! Redirect to the profile");
+          navigate("/profile");
+        }
       })
       .catch((error) => {
         console.error("Error!", error.response);
         setMessage(error.response.data);
       });
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleLogin();
+    }
+  };
+
   return (
     <div style={{ padding: "3rem" }} className="col-md-12">
       <div>
@@ -53,6 +72,7 @@ const Login = () => {
             className="form-control"
             name="password"
             value={password}
+            onKeyDown={handleKeyDown}
           />
         </div>
         <br />

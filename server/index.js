@@ -28,13 +28,13 @@ app.use(express.urlencoded({ extended: true }));
 //cors middleware,一定要放在路由之前
 app.use(cors());
 
+//Routes
 app.use("/api/user", authRoute);
 app.use(
   "/api/courses",
   passport.authenticate("jwt", { session: false }),
   courseRoute
 );
-
 app.get("/", (req, res) => {
   res.send("homepage");
 });

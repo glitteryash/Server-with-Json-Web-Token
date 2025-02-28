@@ -1,7 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AuthService from "../services/auth.service";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    const result = AuthService.logout();
+    if (result) {
+      window.alert("Logout success! Redirect to homepage");
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
     <div>
       <nav>
@@ -25,9 +37,13 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="#">
+                  <span
+                    onClick={handleLogout}
+                    style={{ cursor: "pointer" }}
+                    className="nav-link"
+                  >
                     Logout
-                  </Link>
+                  </span>
                 </li>
               </ul>
             </div>

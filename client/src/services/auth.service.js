@@ -5,7 +5,17 @@ class AuthService {
   login(email, password) {
     return axios.post(`${API_URL}/login`, { email, password });
   }
-  logout() {}
+  logout() {
+    let token = localStorage.getItem("token");
+    if (token) {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      return true;
+    } else {
+      window.alert("Please login first");
+      return false;
+    }
+  }
   register(username, email, password, role) {
     return axios.post(`${API_URL}/register`, {
       username,
@@ -14,7 +24,9 @@ class AuthService {
       role,
     });
   }
-  getCurrentUser() {}
+  getCurrentUser() {
+    return JSON.parse(localStorage.getItem("user"));
+  }
 }
 
 export default new AuthService();
