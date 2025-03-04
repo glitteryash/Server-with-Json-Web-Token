@@ -18,7 +18,7 @@ const Login = () => {
     AuthService.login(email, password)
       .then((response) => {
         if (response.data.token) {
-          console.log("Login success", response);
+          console.log("Login success", response.data);
           localStorage.setItem(
             "user",
             JSON.stringify({
