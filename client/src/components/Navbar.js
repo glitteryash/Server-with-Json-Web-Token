@@ -51,6 +51,13 @@ const Navbar = (props) => {
                 )}
                 {currentUser && (
                   <li className="nav-item">
+                    <Link className="nav-link" to="/course">
+                      Course
+                    </Link>
+                  </li>
+                )}
+                {currentUser && (
+                  <li className="nav-item">
                     <span
                       onClick={handleLogout}
                       style={{ cursor: "pointer" }}

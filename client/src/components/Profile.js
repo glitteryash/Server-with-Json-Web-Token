@@ -18,17 +18,13 @@ const Profile = ({ currentUser, setCurrentUser }) => {
     <div style={{ padding: "3rem" }}>
       {currentUser && (
         <div>
-          <h1>This is profile</h1>
+          <h1>Profile</h1>
           <header className="jumbotron">
-            <h3>
-              <strong>{currentUser._id}</strong>
-            </h3>
             <h3>
               <strong>{currentUser.username}</strong>
             </h3>
-            <h3>
-              <strong>{currentUser.email}</strong>
-            </h3>
+            <h5>{currentUser.role}</h5>
+            <h5>{currentUser.email}</h5>
           </header>
         </div>
       )}

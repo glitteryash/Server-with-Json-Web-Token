@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
+import Course from "./components/Course";
 import { Routes, Route } from "react-router-dom";
 import AuthService from "./services/auth.service";
 
@@ -28,6 +29,12 @@ function App() {
               currentUser={currentUser}
               setCurrentUser={setCurrentUser}
             />
+          }
+        />
+        <Route
+          path="course"
+          element={
+            <Course currentUser={currentUser} setCurrentUser={setCurrentUser} />
           }
         />
       </Routes>

@@ -25,6 +25,7 @@ const Login = () => {
               email: response.data.user.email,
               username: response.data.user.username,
               _id: response.data.user._id,
+              role: response.data.user.role,
             })
           );
           localStorage.setItem("token", response.data.token);
