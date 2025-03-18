@@ -21,6 +21,23 @@ router.get("/", async (req, res) => {
   }
 });
 
+//藉由instructor id確認課程
+router.get("/instructor/:_instructor_id", async (req, res) => {
+  try {
+    let { _instructor_id } = req.params;
+    let course = await Course.findOne({ instructor: _instructor_id }).populate(
+      "instructor",
+      ["username", "email"]
+    );
+    if (!course) {
+      return res.status(404).send("Course not found");
+    }
+    res.status(200).send(course);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 //確認特定課程
 router.get("/:_id", async (req, res) => {
   try {

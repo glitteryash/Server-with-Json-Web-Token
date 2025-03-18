@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
     if (isMatch) {
       const tokenObject = { _id: user._id, email: user.email };
       const token = jwt.sign(tokenObject, process.env.PASSPORT_SECRET);
-      return res.send({ success: true, token: `JWT ` + token, user });
+      return res.send({ success: true, token: `jwt ` + token, user });
     } else {
       return res.status(401).send("Authentication failed");
     }
