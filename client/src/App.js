@@ -5,6 +5,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Course from "./components/Course";
+import PostCourse from "./components/PostCource";
 import { Routes, Route } from "react-router-dom";
 import AuthService from "./services/auth.service";
 
@@ -35,6 +36,15 @@ function App() {
           path="course"
           element={
             <Course currentUser={currentUser} setCurrentUser={setCurrentUser} />
+          }
+        />
+        <Route
+          path="postcourse"
+          element={
+            <PostCourse
+              currentUser={currentUser}
+              setCurrentUser={setCurrentUser}
+            />
           }
         />
       </Routes>

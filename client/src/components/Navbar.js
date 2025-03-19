@@ -56,6 +56,13 @@ const Navbar = (props) => {
                     </Link>
                   </li>
                 )}
+                {currentUser && currentUser.role == "instructor" && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/postcourse">
+                      Post Course
+                    </Link>
+                  </li>
+                )}
                 {currentUser && (
                   <li className="nav-item">
                     <span
