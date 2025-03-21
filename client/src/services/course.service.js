@@ -19,11 +19,38 @@ class CourseService {
       }
     );
   }
+  getEnrolledCourses(_id) {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    } else {
+      token = "";
+    }
+    return axios.get(`$(API_URL)/student/$(_id)`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
+
+  getCourseByName(name) {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    } else {
+      token = "";
+    }
+    return axios.get(`${API_URL}/findbyname/${name}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+  }
 
   get(_id) {
     let token;
     if (localStorage.getItem("token")) {
-      token = localStorage.getItem(token);
+      token = localStorage.getItem("token");
     } else {
       token = "";
     }

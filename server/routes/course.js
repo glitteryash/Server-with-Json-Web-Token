@@ -25,12 +25,45 @@ router.get("/", async (req, res) => {
 router.get("/instructor/:_instructor_id", async (req, res) => {
   try {
     let { _instructor_id } = req.params;
-    let course = await Course.findOne({ instructor: _instructor_id }).populate(
+    let course = await Course.find({ instructor: _instructor_id }).populate(
       "instructor",
       ["username", "email"]
     );
     if (!course) {
       return res.status(404).send("Course not found");
+    }
+    res.status(200).send(course);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
+//藉由學生id確認課程
+router.get("/student/:_student_id", async (req, res) => {
+  try {
+    let { _student_id } = req.params;
+    let course = await Course.find({ students: _student_id }).populate(
+      "instructor",
+      ["username", "email"]
+    );
+    if (!course) {
+      return res.status(404).send("course not found");
+    }
+    res.status(200).send(course);
+  } catch (err) {
+    res.status(500).send(err.massage);
+  }
+});
+
+//搜尋課程
+router.get("/findbyname/:name", async (req, res) => {
+  try {
+    let { name } = req.params;
+    let course = await Course.find({
+      title: { $regex: name, $options: "i" }, //模糊搜尋且不區分大小寫
+    }).populate("instructor", ["username", "email"]);
+    if (course.length === 0) {
+      return res.status(404).send("course not found");
     }
     res.status(200).send(course);
   } catch (err) {
