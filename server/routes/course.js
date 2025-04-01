@@ -119,6 +119,28 @@ router.post("/", async (req, res) => {
   }
 });
 
+//學生選課
+router.post("/enroll/:_id", async (req, res) => {
+  try {
+    let { _id } = req.params;
+    let { student_id } = req.body;
+    let course = await Course.findOne({ _id });
+    if (!course) {
+      return res.status(404).send("Course not found");
+    }
+    if (course.students.includes(student_id)) {
+      course.students.push(student_id);
+      await course.save();
+      res.status(200).send({
+        msg: "You have successfully enrolled in the course",
+        course, //回傳課程資料
+      });
+    }
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
+
 router.patch("/:_id", async (req, res) => {
   const { error } = courseValidation(req.body);
   if (error) {

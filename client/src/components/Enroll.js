@@ -6,6 +6,7 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
   const navigate = useNavigate();
   let [searchInput, setSearchInput] = useState("");
   let [searchResult, setSearchResult] = useState(null);
+  let [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
@@ -26,10 +27,18 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
       .then((data) => {
         console.log(data);
         setSearchResult(data.data);
+        setHasSearched(true);
       })
       .catch((err) => {
+        setSearchResult(null);
         console.error(err);
       });
+  };
+  let handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
   };
 
   return (
@@ -53,34 +62,46 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
             onChange={handleChangeInput}
             type="text"
             class="form-control"
+            onKeyDown={handleKeyDown}
           />
           <button onClick={handleSearch} className="btn btn-primary">
             Search
           </button>
         </div>
       )}
-      {currentUser && searchResult && searchResult.length != 0 && (
+      {currentUser && searchResult && searchResult.length > 0 && (
         <div>
           <p>Data we got back from API.</p>
-          {searchResult.map((course) => (
-            <div key={course._id} className="card" style={{ width: "18rem" }}>
-              <div className="card-body">
-                <h5 className="card-title">{course.title}</h5>
-                <p className="card-text">{course.description}</p>
-                <p>Price: {course.price}</p>
-                <p>Student: {course.students.length}</p>
-                <a
-                  href="#"
-                  // onClick={handleEnroll}
-                  className="card-text"
-                  className="btn btn-primary"
-                  id={course._id}
-                >
-                  Enroll
-                </a>
+          <div style={{ display: "flex", flexWrap: "wrap" }}>
+            {searchResult.map((course) => (
+              <div
+                key={course._id}
+                className="card"
+                style={{ width: "18rem", margin: "1rem" }}
+              >
+                <div className="card-body">
+                  <h5 className="card-title">{course.title}</h5>
+                  <p className="card-text">{course.description}</p>
+                  <p>Price: {course.price}</p>
+                  <p>Student: {course.students.length}</p>
+                  <a
+                    href="#"
+                    // onClick={handleEnroll}
+                    className="card-text"
+                    className="btn btn-primary"
+                    id={course._id}
+                  >
+                    Enroll
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        </div>
+      )}
+      {currentUser && hasSearched && !searchResult && (
+        <div>
+          <p>No course found.</p>
         </div>
       )}
     </div>
