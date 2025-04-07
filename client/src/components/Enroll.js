@@ -31,6 +31,7 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
       })
       .catch((err) => {
         setSearchResult(null);
+        setHasSearched(true);
         console.error(err);
       });
   };
@@ -39,6 +40,18 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
       e.preventDefault();
       handleSearch();
     }
+  };
+
+  let handleEnroll = (e) => {
+    CourseService.enroll(e.target.id, currentUser._id)
+      .then((data) => {
+        console.log(data);
+        window.alert("You have successfully enrolled in the course");
+        navigate("/course");
+      })
+      .catch((error) => {
+        console.error(error.response);
+      });
   };
 
   return (
@@ -61,7 +74,7 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
           <input
             onChange={handleChangeInput}
             type="text"
-            class="form-control"
+            className="form-control"
             onKeyDown={handleKeyDown}
           />
           <button onClick={handleSearch} className="btn btn-primary">
@@ -84,15 +97,23 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
                   <p className="card-text">{course.description}</p>
                   <p>Price: {course.price}</p>
                   <p>Student: {course.students.length}</p>
-                  <a
-                    href="#"
-                    // onClick={handleEnroll}
-                    className="card-text"
-                    className="btn btn-primary"
-                    id={course._id}
-                  >
-                    Enroll
-                  </a>
+                  {course.students.includes(currentUser._id) ? ( //確認是否已經選課
+                    <p
+                      className="btn btn-outline-secondary"
+                      style={{ cursor: "default" }}
+                    >
+                      Already enrolled
+                    </p>
+                  ) : (
+                    <a
+                      href="#"
+                      onClick={handleEnroll}
+                      className="btn btn-primary"
+                      id={course._id}
+                    >
+                      Enroll
+                    </a>
+                  )}
                 </div>
               </div>
             ))}

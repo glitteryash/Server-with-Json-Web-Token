@@ -26,7 +26,7 @@ class CourseService {
     } else {
       token = "";
     }
-    return axios.get(`$(API_URL)/student/$(_id)`, {
+    return axios.get(`${API_URL}/student/${_id}`, {
       headers: {
         Authorization: token,
       },
@@ -59,6 +59,24 @@ class CourseService {
         Authorization: token,
       },
     });
+  }
+
+  enroll(course_id, student_id) {
+    let token;
+    if (localStorage.getItem("token")) {
+      token = localStorage.getItem("token");
+    } else {
+      token = "";
+    }
+    return axios.post(
+      `${API_URL}/enroll/${course_id}`,
+      { student_id },
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
   }
 }
 

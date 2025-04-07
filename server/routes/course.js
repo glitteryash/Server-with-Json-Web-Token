@@ -88,6 +88,7 @@ router.get("/:_id", async (req, res) => {
   }
 });
 
+//講師新增課程
 router.post("/", async (req, res) => {
   //新增前先確認需入內容是否符合規範
   const { error } = courseValidation(req.body);
@@ -120,22 +121,26 @@ router.post("/", async (req, res) => {
 });
 
 //學生選課
-router.post("/enroll/:_id", async (req, res) => {
+router.post("/enroll/:course_id", async (req, res) => {
   try {
-    let { _id } = req.params;
+    let { course_id } = req.params;
     let { student_id } = req.body;
-    let course = await Course.findOne({ _id });
+    let course = await Course.findOne({ _id: course_id });
     if (!course) {
       return res.status(404).send("Course not found");
     }
+
+    //檢查學生是否已經選過這門課
     if (course.students.includes(student_id)) {
-      course.students.push(student_id);
-      await course.save();
-      res.status(200).send({
-        msg: "You have successfully enrolled in the course",
-        course, //回傳課程資料
-      });
+      return res.status(400).send("You have already enrolled in this course");
     }
+
+    course.students.push(student_id);
+    await course.save();
+    res.status(200).send({
+      msg: "You have successfully enrolled in the course",
+      course, //回傳課程資料
+    });
   } catch (err) {
     res.status(500).send(err.message);
   }
