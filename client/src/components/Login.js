@@ -26,6 +26,7 @@ const Login = () => {
               username: response.data.user.username,
               _id: response.data.user._id,
               role: response.data.user.role,
+              profileImage: response.data.user.profileImage,
             })
           );
           localStorage.setItem("token", response.data.token);

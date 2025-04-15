@@ -3,6 +3,7 @@ const registerValidation = require("../validation").registerValidation;
 const loginValidation = require("../validation").loginValidation;
 const User = require("../models").userModel;
 const jwt = require("jsonwebtoken");
+const { uploadProfile, uploadCourse } = require("../middleware/multer");
 
 router.use((req, res, next) => {
   console.log("A request is coming in to /auth");
@@ -15,27 +16,36 @@ router.get("/testAPI", (req, res) => {
 });
 
 //register
-router.post("/register", async (req, res) => {
-  console.log("register route is working");
-  const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-  // check if the user is already in the database
-  const emailExist = await User.findOne({ email: req.body.email });
-  if (emailExist) return res.status(400).send("Email has already been used.");
-  // create a new user
-  const newUser = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password,
-    role: req.body.role,
-  });
+router.post("/register", uploadProfile.single("avatar"), async (req, res) => {
   try {
+    console.log("register route is working");
+    const { error } = registerValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+    // check if the user is already in the database
+    const emailExist = await User.findOne({ email: req.body.email });
+    if (emailExist) return res.status(400).send("Email has already been used.");
+
+    //chech if the avatar is uploaded
+    const avatarUrl = req.file
+      ? req.file.path
+      : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744614681/23630343_1_iyuagg.png"; //預設圖片
+
+    // create a new user
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      role: req.body.role,
+      profileImage: avatarUrl,
+    });
+
     const savedUser = await newUser.save();
     res.status(200).send({
       msg: "User has been saved successfully",
       data: savedUser,
     });
   } catch (err) {
+    console.error("Upload or saving failed:", err);
     res
       .status(400)
       .send({ msg: "User could not be saved", error: err.message });

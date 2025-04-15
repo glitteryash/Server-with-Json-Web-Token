@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import AuthService from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 
@@ -7,8 +7,10 @@ const Register = () => {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [role, setRole] = useState("student");
+  let [profileImage, setProfileImage] = useState(null);
   let [message, setMessage] = useState(""); //顯示Error Message
   const navigate = useNavigate(); //React Router v5 用useHistory()
+  const fileInputRef = useRef(null); //用來觸發文件選擇框
 
   const handleChangeUsername = (e) => {
     return setUsername(e.target.value);
@@ -22,15 +24,25 @@ const Register = () => {
   const handleChangeRole = (e) => {
     return setRole(e.target.value);
   };
+  const handleImageClick = () => {
+    fileInputRef.current.click(); // 點擊圖片時，觸發文件選擇
+  };
+  const handleChangeProfileImage = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file); // 保存選擇的檔案
+    }
+  };
 
   const handleRegister = () => {
-    AuthService.register(username, email, password, role)
+    AuthService.register(username, email, password, role, profileImage)
       .then(() => {
         window.alert("Registration success. Redirect to the login page");
         navigate("/login");
       })
       .catch((error) => {
-        console.error("Error:", error.response);
+        console.error("Error:", error);
+        console.error("Error Response:", error.response);
         setMessage(error.response.data);
       });
   };
@@ -88,6 +100,51 @@ const Register = () => {
             <option value="instructor">Instructor</option>
           </select>
         </div>
+        <br />
+        <div className="form-group">
+          <label htmlFor="profileImage">Profile Image</label>
+          <div
+            onClick={handleImageClick}
+            style={{
+              cursor: "pointer",
+              width: 300,
+              height: 300,
+              overflow: "hidden",
+              borderRadius: "50%",
+              backgroundColor: "#ccc",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              margin: "1rem",
+            }}
+          >
+            <img
+              src={
+                profileImage
+                  ? URL.createObjectURL(profileImage)
+                  : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744614681/23630343_1_iyuagg.png"
+              }
+              alt="profileImage"
+              style={{
+                width: "155%",
+                height: "auto",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".jpg, .jpeg, .png"
+            name="profileImage"
+            id="profileImage"
+            style={{ display: "none" }}
+            onChange={handleChangeProfileImage}
+          />
+          <br />
+          <div></div>
+        </div>
+        <br />
         <br />
         <button onClick={handleRegister} className="btn btn-primary">
           <span>Register</span>

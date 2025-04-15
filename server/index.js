@@ -1,14 +1,14 @@
+require("dotenv").config(); //載入dotenv，一定要寫在最前面
 const express = require("express");
 const app = express();
+const port = process.env.PORT || 8080;
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const authRoute = require("./routes").auth;
 const courseRoute = require("./routes").course;
 const cors = require("cors");
 
-dotenv.config();
 const passport = require("passport");
-require("./config/passport")(passport);
+require("./config/passport")(passport); // 將 passport 實例傳遞到設定函式，來進行認證策略的設定
 //connect to DB
 mongoose
   .connect(process.env.DB_CONNECT, {
@@ -39,6 +39,6 @@ app.get("/", (req, res) => {
   res.send("homepage");
 });
 
-app.listen(8080, () => {
-  console.log("Server is running on port 8080");
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

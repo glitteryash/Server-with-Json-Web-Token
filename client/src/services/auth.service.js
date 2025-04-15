@@ -1,5 +1,7 @@
 import axios from "axios";
-const API_URL = "http://localhost:8080/api/user";
+const API_URL = `${process.env.REACT_APP_API_URL}/user`;
+
+console.log("API_URL", API_URL);
 
 class AuthService {
   login(email, password) {
@@ -16,13 +18,16 @@ class AuthService {
       return false;
     }
   }
-  register(username, email, password, role) {
-    return axios.post(`${API_URL}/register`, {
-      username,
-      email,
-      password,
-      role,
-    });
+  register(username, email, password, role, profileImage) {
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("role", role);
+    if (profileImage) {
+      formData.append("avatar", profileImage);
+    }
+    return axios.post(`${API_URL}/register`, formData);
   }
   getCurrentUser() {
     return JSON.parse(localStorage.getItem("user"));

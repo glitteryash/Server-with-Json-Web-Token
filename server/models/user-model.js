@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     enum: ["student", "instructor"],
     required: true,
   },
+  profileImage: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744614681/23630343_1_iyuagg.png",
+  },
   date: {
     type: Date,
     default: Date.now,
