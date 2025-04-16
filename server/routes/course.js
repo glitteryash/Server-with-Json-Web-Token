@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const courseValidation = require("../validation").courseValidation;
 const Course = require("../models").courseModel;
+const { uploadProfile, uploadCourse } = require("../middleware/multer");
 
 router.use((req, res, next) => {
   console.log("A request is coming in to /course");
@@ -89,24 +90,35 @@ router.get("/:_id", async (req, res) => {
 });
 
 //講師新增課程
-router.post("/", async (req, res) => {
-  //新增前先確認需入內容是否符合規範
-  const { error } = courseValidation(req.body);
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-  //驗證身份是否可新增課程
-  if (req.user.isStudent()) {
-    return res.status(401).send("You are not authorized to create a course.");
-  }
-  const { title, description, price } = req.body;
-  let newCourse = new Course({
-    title,
-    description,
-    price,
-    instructor: req.user._id,
-  });
+router.post("/", uploadCourse.single("courseImage"), async (req, res) => {
   try {
+    //新增前先確認需入內容是否符合規範
+    const { error } = courseValidation(req.body);
+    if (error) {
+      return res.status(400).send(error.details[0].message);
+    }
+    //驗證身份是否可新增課程
+    if (req.user.isStudent()) {
+      return res.status(401).send("You are not authorized to create a course.");
+    }
+
+    const courseImage = req.file
+      ? req.file.path
+      : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg"; //如果沒有上傳圖片，則設為預設圖片
+
+    console.log("title", req.body.title);
+    console.log("description", req.body.description);
+    console.log("price", req.body.price);
+    console.log("Received file:", req.file);
+    let newCourse = new Course({
+      title: req.body.title,
+      description: req.body.description,
+      price: req.body.price,
+      instructor: req.user._id,
+      courseImage: courseImage,
+    });
+    console.log("newCourse", newCourse);
+
     await newCourse.save();
     res.status(200).send({
       msg: "Course has been saved successfully",
@@ -114,9 +126,7 @@ router.post("/", async (req, res) => {
     });
     console.log("User ID:", req.user._id);
   } catch (err) {
-    res
-      .status(400)
-      .send({ msg: "Course could not be saved", error: err.message });
+    res.status(400).send(err.message);
   }
 });
 

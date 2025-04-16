@@ -22,6 +22,11 @@ const courseSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  courseImage: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg",
+  },
 });
 
 module.exports = mongoose.model("Course", courseSchema);

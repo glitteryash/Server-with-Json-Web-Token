@@ -33,7 +33,7 @@ const loginValidation = (data) => {
 const courseValidation = (data) => {
   const schema = Joi.object({
     title: Joi.string().required().min(2).max(50),
-    description: Joi.string().required().min(2).max(50),
+    description: Joi.string().required().min(2).max(150),
     price: Joi.number().required().min(1).max(9999),
   }).messages({
     "any.require": "{#label}は必須項目です。",
