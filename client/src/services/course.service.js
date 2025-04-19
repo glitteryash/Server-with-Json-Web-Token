@@ -1,25 +1,29 @@
 import axios from "axios";
-const API_URL = `${process.env.REACT_APP_API_URL}/courses`;
-
+const API_URL = `http://localhost:8080/api/courses`;
+// const API_URL = `${process.env.REACT_APP_API_URL}/courses`;
 console.log("API_URL", API_URL);
 
 class CourseService {
-  post(title, description, price) {
+  post(title, description, price, courseImage) {
     let token;
     if (localStorage.getItem("token")) {
       token = localStorage.getItem("token");
     } else {
       token = "";
     }
-    return axios.post(
-      API_URL,
-      { title, description, price },
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    if (courseImage) {
+      formData.append("courseImage", courseImage);
+    }
+    return axios.post(API_URL, formData, {
+      headers: {
+        Authorization: token,
+      },
+    });
   }
   getEnrolledCourses(_id) {
     let token;

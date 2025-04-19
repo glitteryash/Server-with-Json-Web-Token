@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import CourseService from "../services/course.service";
 
@@ -7,7 +7,10 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
   let [description, setDescription] = useState("");
   let [price, setPrice] = useState(0);
   let [message, setMessage] = useState("");
+  let [courseImage, setCourseImage] = useState(null);
   let navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
   useEffect(() => {
     if (!currentUser) {
       window.alert("Please login before posting a new course");
@@ -17,25 +20,50 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
       navigate("/login");
     }
   }, [currentUser]);
-  let handleChangeTitle = (e) => {
+
+  useEffect(() => {
+    // 如果 profileImage 有值（即圖片已選擇）
+    if (courseImage) {
+      // 在組件卸載或者 courseImage 改變時執行這個清理函式
+      return () => {
+        // 檢查 courseImage 是否是 Blob 物件
+        if (courseImage instanceof Blob) {
+          // 釋放之前創建的 Object URL
+          URL.revokeObjectURL(courseImage);
+        }
+      };
+    }
+  }, [courseImage]);
+
+  const handleChangeTitle = (e) => {
     setTitle(e.target.value);
   };
-  let handleChangeDescription = (e) => {
+  const handleChangeDescription = (e) => {
     setDescription(e.target.value);
   };
-  let handleChangePrice = (e) => {
+  const handleChangePrice = (e) => {
     setPrice(e.target.value);
   };
-  let postCourse = () => {
-    CourseService.post(title, description, price)
+  const postCourse = () => {
+    CourseService.post(title, description, price, courseImage)
       .then(() => {
         window.alert("New course has been created");
         navigate("/course");
       })
       .catch((error) => {
-        console.error("Error!", error.response);
+        console.error("Error:", error);
+        console.error("Error Response:", error.response);
         setMessage(error.response.data);
       });
+  };
+  const handleImageClick = () => {
+    fileInputRef.current.click();
+  };
+  const handleChangeCourseImage = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCourseImage(file);
+    }
   };
 
   return (
@@ -89,6 +117,41 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
               name="price"
               id="price"
               value={price}
+            />
+          </div>
+          <br />
+          <div className="form-group">
+            <label htmlFor="courseImage">Image</label>
+            <div
+              onClick={handleImageClick}
+              style={{
+                cursor: "pointer",
+                width: 600,
+                height: 400,
+                overflow: "hidden",
+                borderRadius: "25px",
+                backgroundColor: "#ccc",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                margin: "1rem",
+              }}
+            >
+              <img
+                src={
+                  courseImage
+                    ? URL.createObjectURL(courseImage)
+                    : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg"
+                }
+                alt="courseImage"
+              />
+            </div>
+            <input
+              onChange={handleChangeCourseImage}
+              id="courseImage"
+              ref={fileInputRef}
+              type="file"
+              style={{ display: "none" }}
             />
           </div>
           <br />

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import AuthService from "../services/auth.service";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,20 @@ const Register = () => {
   let [message, setMessage] = useState(""); //顯示Error Message
   const navigate = useNavigate(); //React Router v5 用useHistory()
   const fileInputRef = useRef(null); //用來觸發文件選擇框
+
+  useEffect(() => {
+    // 如果 profileImage 有值（即圖片已選擇）
+    if (profileImage) {
+      // 在組件卸載或者 profileImage 改變時執行這個清理函式
+      return () => {
+        // 檢查 profileImage 是否是 Blob 物件（表示它是一個圖片檔案）
+        if (profileImage instanceof Blob) {
+          // 釋放之前創建的 Object URL
+          URL.revokeObjectURL(profileImage);
+        }
+      };
+    }
+  }, [profileImage]); // 這個 useEffect 依賴於 profileImage，當 profileImage 改變時會重新執行
 
   const handleChangeUsername = (e) => {
     return setUsername(e.target.value);
@@ -107,8 +121,8 @@ const Register = () => {
             onClick={handleImageClick}
             style={{
               cursor: "pointer",
-              width: 300,
-              height: 300,
+              width: 150,
+              height: 150,
               overflow: "hidden",
               borderRadius: "50%",
               backgroundColor: "#ccc",
@@ -121,14 +135,15 @@ const Register = () => {
             <img
               src={
                 profileImage
-                  ? URL.createObjectURL(profileImage)
-                  : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744614681/23630343_1_iyuagg.png"
+                  ? URL.createObjectURL(profileImage) // 使用URL.createObjectURL()來顯示選擇的圖片
+                  : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744768869/Default_pfp_gudyey.png"
               }
               alt="profileImage"
               style={{
-                width: "155%",
-                height: "auto",
+                width: "100%",
+                height: "100%",
                 objectFit: "cover",
+                objectPosition: "center",
               }}
             />
           </div>

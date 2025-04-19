@@ -23,8 +23,8 @@ const Profile = ({ currentUser, setCurrentUser }) => {
             <div
               style={{
                 cursor: "pointer",
-                width: 300,
-                height: 300,
+                width: 150,
+                height: 150,
                 overflow: "hidden",
                 borderRadius: "50%",
                 backgroundColor: "#ccc",
@@ -38,7 +38,7 @@ const Profile = ({ currentUser, setCurrentUser }) => {
                 src={currentUser.profileImage}
                 alt="profileImage"
                 style={{
-                  width: "155%",
+                  width: "100%",
                   height: "auto",
                   objectFit: "cover",
                 }}
