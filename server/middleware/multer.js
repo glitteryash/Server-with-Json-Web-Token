@@ -29,8 +29,8 @@ const courseStorage = new CloudinaryStorage({
     allowed_formats: ["jpg", "jpeg", "png"],
     transformation: [
       {
-        width: 800,
-        height: 600,
+        width: 600,
+        height: 400,
         crop: "fill",
       },
     ],

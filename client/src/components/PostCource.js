@@ -134,7 +134,7 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                margin: "1rem",
+                margin: "1rem 0rem",
               }}
             >
               <img
@@ -143,6 +143,11 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
                     ? URL.createObjectURL(courseImage)
                     : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg"
                 }
+                style={{
+                  objectFit: "cover",
+                  width: "100%",
+                  height: "100%",
+                }}
                 alt="courseImage"
               />
             </div>
@@ -153,6 +158,9 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
               type="file"
               style={{ display: "none" }}
             />
+            <p style={{ fontSize: "0.8rem", color: "gray" }}>
+              対応ファイル形式：JPG・PNG（600×400px以上）
+            </p>
           </div>
           <br />
           <div className="form-group">

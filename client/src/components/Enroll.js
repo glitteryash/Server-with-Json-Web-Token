@@ -56,19 +56,6 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
 
   return (
     <div style={{ padding: "3rem" }}>
-      {/* {!currentUser && (
-        <div>
-          <p>You must login first before searching for courses.</p>
-          <button class="btn btn-primary btn-lg" onClick={handleTakeToLogin}>
-            Take me to login page.
-          </button>
-        </div>
-      )} */}
-      {/* {currentUser && currentUser.user.role == "instructor" && (
-        <div>
-          <h1>Only students can enroll in courses.</h1>
-        </div>
-      )} */}
       {currentUser && currentUser.role == "student" && (
         <div className="search input-group mb-3">
           <input
