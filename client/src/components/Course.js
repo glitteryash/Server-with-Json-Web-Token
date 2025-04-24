@@ -37,7 +37,16 @@ const Course = ({ currentUser, setCurrentUser }) => {
   return (
     <div style={{ padding: "2rem" }}>
       {currentUser && currentUser.role === "instructor" && (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "fit-content",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            margin: "10rem auto",
+          }}
+        >
           <img
             src={currentUser.profileImage}
             style={{ maxWidth: "150px", minWidth: "100px", margin: "1rem" }}
@@ -80,7 +89,7 @@ const Course = ({ currentUser, setCurrentUser }) => {
                       overflow: "hidden",
                       width: "100%",
                       height: "300px",
-                      borderRadius: "25px",
+                      borderRadius: "0px",
                       backgroundColor: "#ccc",
                       marginBottom: "1rem",
                     }}
