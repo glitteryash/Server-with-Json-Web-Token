@@ -63,14 +63,13 @@ const Course = ({ currentUser, setCurrentUser }) => {
 
       {currentUser && courseData && courseData.length > 0 && (
         <div>
-          {/* <p>Courses you are involved in</p> */}
           <div
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "1rem",
-              maxWidth: "1850px",
+              maxWidth: "2000px",
               margin: "0 auto",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(450px, 1fr))",
+              gap: "1.5rem",
             }}
           >
             {courseData.map((course) => (
@@ -78,7 +77,7 @@ const Course = ({ currentUser, setCurrentUser }) => {
                 key={course._id}
                 className="card"
                 style={{
-                  width: "600px",
+                  // width: "600px",
                   height: "600px",
                   margin: "1rem 0rem",
                 }}
@@ -117,7 +116,7 @@ const Course = ({ currentUser, setCurrentUser }) => {
                       className="card-text"
                       style={{
                         overflow: "hidden",
-                        // textOverflow: "ellipsis",
+                        textOverflow: "ellipsis",
                         display: "-webkit-box",
                         "-webkit-line-clamp": "3",
                         "-webkit-box-orient": "vertical",
