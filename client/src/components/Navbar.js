@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
 
 const Navbar = (props) => {
@@ -24,50 +24,92 @@ const Navbar = (props) => {
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <Link className="nav-link active" to="/">
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link text-primary fw-bold"
+                        : "nav-link text-secondary"
+                    }
+                    to="/"
+                  >
                     Home
-                  </Link>
+                  </NavLink>
                 </li>
                 {!currentUser && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/register">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "nav-link text-primary fw-bold"
+                          : "nav-link text-secondary"
+                      }
+                      to="/register"
+                    >
                       Register
-                    </Link>
+                    </NavLink>
                   </li>
                 )}
                 {!currentUser && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/login">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "nav-link text-primary fw-bold"
+                          : "nav-link text-secondary"
+                      }
+                      to="/login"
+                    >
                       Login
-                    </Link>
+                    </NavLink>
                   </li>
                 )}
                 {currentUser && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/profile">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "nav-link text-primary fw-bold"
+                          : "nav-link text-secondary"
+                      }
+                      to="/profile"
+                    >
                       Profile
-                    </Link>
+                    </NavLink>
                   </li>
                 )}
                 {currentUser && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/course">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "nav-link text-primary fw-bold"
+                          : "nav-link text-secondary"
+                      }
+                      to="/course"
+                    >
                       Course
-                    </Link>
+                    </NavLink>
                   </li>
                 )}
                 {currentUser && currentUser.role == "instructor" && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/postcourse">
+                    <NavLink className="nav-link" to="/postcourse">
                       Post Course
-                    </Link>
+                    </NavLink>
                   </li>
                 )}
                 {currentUser && currentUser.role == "student" && (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/enroll">
+                    <NavLink
+                      className={({ isActive }) =>
+                        isActive
+                          ? "nav-link text-primary fw-bold"
+                          : "nav-link text-secondary"
+                      }
+                      to="/enroll"
+                    >
                       Enroll
-                    </Link>
+                    </NavLink>
                   </li>
                 )}
                 {currentUser && (

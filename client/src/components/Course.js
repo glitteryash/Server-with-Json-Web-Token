@@ -56,7 +56,21 @@ const Course = ({ currentUser, setCurrentUser }) => {
         </div>
       )}
       {currentUser && currentUser.role === "student" && (
-        <div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "fit-content",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            margin: "10rem auto",
+          }}
+        >
+          <img
+            src={currentUser.profileImage}
+            style={{ maxWidth: "150px", minWidth: "100px", margin: "1rem" }}
+            alt=""
+          />
           <h1>{currentUser.username}さんが購読しているコース</h1>
         </div>
       )}
@@ -68,7 +82,7 @@ const Course = ({ currentUser, setCurrentUser }) => {
               maxWidth: "2000px",
               margin: "0 auto",
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(450px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
               gap: "1.5rem",
             }}
           >
@@ -77,7 +91,6 @@ const Course = ({ currentUser, setCurrentUser }) => {
                 key={course._id}
                 className="card"
                 style={{
-                  // width: "600px",
                   height: "600px",
                   margin: "1rem 0rem",
                 }}

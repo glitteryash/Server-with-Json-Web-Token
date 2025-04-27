@@ -72,24 +72,92 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
       {currentUser && searchResult && searchResult.length > 0 && (
         <div>
           <p>Data we got back from API.</p>
-          <div style={{ display: "flex", flexWrap: "wrap" }}>
+          <div
+            style={{
+              maxWidth: "2000px",
+              margin: "0 auto",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
+              gap: "1.5rem",
+            }}
+          >
             {searchResult.map((course) => (
               <div
                 key={course._id}
                 className="card"
-                style={{ width: "18rem", margin: "1rem" }}
+                style={{
+                  margin: "1rem 0rem",
+                }}
               >
-                <div className="card-body">
-                  <h5 className="card-title">{course.title}</h5>
-                  <p className="card-text">{course.description}</p>
-                  <p>Price: {course.price}</p>
-                  <p>Student: {course.students.length}</p>
+                <div className="card-body" style={{ margin: "1rem" }}>
+                  <div
+                    style={{
+                      overflow: "hidden",
+                      width: "100%",
+                      height: "300px",
+                      borderRadius: "0px",
+                      backgroundColor: "#ccc",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    <img
+                      src={course.courseImage}
+                      style={{
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      }}
+                      alt=""
+                    />
+                  </div>
+                  <div
+                    style={{
+                      marginBottom: "1rem",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <h3 className="card-title">{course.title}</h3>
+                    <p
+                      className="card-text"
+                      style={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        "-webkit-line-clamp": "3",
+                        "-webkit-box-orient": "vertical",
+                      }}
+                    >
+                      {course.description}
+                    </p>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p
+                      className="btn btn-outline-primary"
+                      style={{ cursor: "default", marginRight: "1rem" }}
+                    >
+                      ${course.price}
+                    </p>
+                    <p>人数 {course.students.length}</p>
+                  </div>
                   {course.students.includes(currentUser._id) ? ( //確認是否已經選課
                     <p
                       className="btn btn-outline-secondary"
-                      style={{ cursor: "default" }}
+                      style={{
+                        display: "block",
+                        cursor: "default",
+                        margin: "0 auto",
+                        width: "100px",
+                      }}
                     >
-                      Already enrolled
+                      購読済み
                     </p>
                   ) : (
                     <a
@@ -97,6 +165,12 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
                       onClick={handleEnroll}
                       className="btn btn-primary"
                       id={course._id}
+                      style={{
+                        display: "block",
+                        margin: "0 auto",
+                        width: "100px",
+                        // textAlign: "center",
+                      }}
                     >
                       Enroll
                     </a>
