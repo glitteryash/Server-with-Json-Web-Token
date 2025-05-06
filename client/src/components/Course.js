@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { data, useNavigate } from "react-router-dom";
-import CourseService from "../services/course.service";
+import React, { useEffect, useState } from 'react';
+import { data, useNavigate } from 'react-router-dom';
+import CourseService from '../services/course.service';
 
 const Course = ({ currentUser, setCurrentUser }) => {
   let navigate = useNavigate();
@@ -8,13 +8,13 @@ const Course = ({ currentUser, setCurrentUser }) => {
   useEffect(() => {
     let _id;
     if (!currentUser) {
-      window.alert("Please login first");
-      navigate("/login");
+      window.alert('Please login first');
+      navigate('/login');
       return;
     }
     _id = currentUser._id;
 
-    if (currentUser.role == "instructor") {
+    if (currentUser.role == 'instructor') {
       CourseService.get(_id)
         .then((data) => {
           console.log(data);
@@ -23,7 +23,7 @@ const Course = ({ currentUser, setCurrentUser }) => {
         .catch((error) => {
           console.error(error);
         });
-    } else if (currentUser.role == "student") {
+    } else if (currentUser.role == 'student') {
       CourseService.getEnrolledCourses(_id)
         .then((data) => {
           console.log(data);
@@ -35,116 +35,61 @@ const Course = ({ currentUser, setCurrentUser }) => {
     }
   }, [currentUser]);
   return (
-    <div style={{ padding: "2rem" }}>
-      {currentUser && currentUser.role === "instructor" && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            width: "fit-content",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            margin: "10rem auto",
-          }}
-        >
+    <div className="p-8">
+      {currentUser && currentUser.role === 'instructor' && (
+        <div className="container mx-auto my-40 flex flex-wrap items-center justify-center">
           <img
             src={currentUser.profileImage}
-            style={{ maxWidth: "150px", minWidth: "100px", margin: "1rem" }}
-            alt=""
+            className="m-4 w-full min-w-[100px] max-w-[150px]"
+            alt="Instructor Profile"
           />
-          <h1>{currentUser.username}さんが作成したコース</h1>
+          <h1 className="text-xl font-semibold text-gray-800">
+            {currentUser.username}さんが作成したコース
+          </h1>
         </div>
       )}
-      {currentUser && currentUser.role === "student" && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            width: "fit-content",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            margin: "10rem auto",
-          }}
-        >
+
+      {currentUser && currentUser.role === 'student' && (
+        <div className="container mx-auto my-40 flex flex-wrap items-center justify-center">
           <img
             src={currentUser.profileImage}
-            style={{ maxWidth: "150px", minWidth: "100px", margin: "1rem" }}
-            alt=""
+            className="m-4 w-full min-w-[100px] max-w-[150px]"
+            alt="Student Profile"
           />
-          <h1>{currentUser.username}さんが購読しているコース</h1>
+          <h1 className="text-xl font-semibold text-gray-800">
+            {currentUser.username}さんが購読しているコース
+          </h1>
         </div>
       )}
 
       {currentUser && courseData && courseData.length > 0 && (
-        <div>
-          <div
-            style={{
-              maxWidth: "2000px",
-              margin: "0 auto",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-              gap: "1.5rem",
-            }}
-          >
+        <div className="container mx-auto">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {courseData.map((course) => (
               <div
                 key={course._id}
-                className="card"
-                style={{
-                  height: "600px",
-                  margin: "1rem 0rem",
-                }}
+                className="h-[580px] overflow-hidden rounded-lg border bg-white shadow-md"
               >
-                <div className="card-body" style={{ margin: "1rem" }}>
-                  <div
-                    style={{
-                      overflow: "hidden",
-                      width: "100%",
-                      height: "300px",
-                      borderRadius: "0px",
-                      backgroundColor: "#ccc",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <img
-                      src={course.courseImage}
-                      style={{
-                        objectFit: "cover",
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      alt=""
-                    />
-                  </div>
-                  <div
-                    style={{
-                      marginBottom: "1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <h3 className="card-title">{course.title}</h3>
-                    <p
-                      className="card-text"
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        "-webkit-line-clamp": "3",
-                        "-webkit-box-orient": "vertical",
-                      }}
-                    >
+                <div className="h-[300px] w-full overflow-hidden bg-gray-300">
+                  <img
+                    src={course.courseImage}
+                    className="h-full w-full object-cover"
+                    alt="Course"
+                  />
+                </div>
+                <div className="flex h-[calc(100%-300px)] flex-col justify-around p-4">
+                  <p className="w-fit rounded border border-blue-500 px-3 py-1 text-sm text-blue-500">
+                    ${course.price}
+                  </p>
+                  <div className="mb-4">
+                    <h3 className="min-h-[3rem] text-lg font-bold text-gray-800">{course.title}</h3>
+                    <p className="text-md line-clamp-3 leading-relaxed text-gray-600">
                       {course.description}
                     </p>
                   </div>
-                  <p
-                    className="btn btn-outline-primary"
-                    style={{ cursor: "default" }}
-                  >
-                    ${course.price}
-                  </p>
-                  <p>人数 {course.students.length}</p>
+                  <div>
+                    <p className="text-sm text-gray-700">人数 {course.students.length}</p>
+                  </div>
                 </div>
               </div>
             ))}

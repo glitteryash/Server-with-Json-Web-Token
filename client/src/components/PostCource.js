@@ -1,23 +1,23 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import CourseService from "../services/course.service";
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CourseService from '../services/course.service';
 
 const PostCourse = ({ currentUser, setCurrentUser }) => {
-  let [title, setTitle] = useState("");
-  let [description, setDescription] = useState("");
+  let [title, setTitle] = useState('');
+  let [description, setDescription] = useState('');
   let [price, setPrice] = useState(0);
-  let [message, setMessage] = useState("");
+  let [message, setMessage] = useState('');
   let [courseImage, setCourseImage] = useState(null);
   let navigate = useNavigate();
   const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (!currentUser) {
-      window.alert("Please login before posting a new course");
-      navigate("/login");
-    } else if (currentUser.role !== "instructor") {
-      window.alert("Only instructors can post a new course");
-      navigate("/login");
+      window.alert('Please login before posting a new course');
+      navigate('/login');
+    } else if (currentUser.role !== 'instructor') {
+      window.alert('Only instructors can post a new course');
+      navigate('/login');
     }
   }, [currentUser]);
 
@@ -47,12 +47,12 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
   const postCourse = () => {
     CourseService.post(title, description, price, courseImage)
       .then(() => {
-        window.alert("New course has been created");
-        navigate("/course");
+        window.alert('New course has been created');
+        navigate('/course');
       })
       .catch((error) => {
-        console.error("Error:", error);
-        console.error("Error Response:", error.response);
+        console.error('Error:', error);
+        console.error('Error Response:', error.response);
         setMessage(error.response.data);
       });
   };
@@ -67,13 +67,13 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
   };
 
   return (
-    <div style={{ padding: "3rem" }} className="col-md-12">
+    <div className="mx-auto w-full max-w-xl p-12">
       {!currentUser && (
         <div>
           <p>Please login before posting a new course</p>
         </div>
       )}
-      {currentUser && currentUser.role == "instructor" && (
+      {currentUser && currentUser.role == 'instructor' && (
         <div>
           {message && (
             <div className="alert alert-danger" role="alert">
@@ -82,11 +82,13 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
           )}
 
           <div className="form-group">
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title" className="mb-1 block text-sm font-medium text-gray-700">
+              Title
+            </label>
             <input
               onChange={handleChangeTitle}
               type="text"
-              className="form-control"
+              className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               name="title"
               id="title"
               value={title}
@@ -96,11 +98,13 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
           <br />
 
           <div className="form-group">
-            <label htmlFor="description">Description</label>
+            <label htmlFor="description" className="mb-1 block text-sm font-medium text-gray-700">
+              Description
+            </label>
             <textarea
               onChange={handleChangeDescription}
               type="password"
-              className="form-control"
+              className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               name="description"
               id="description"
               value={description}
@@ -109,11 +113,13 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
 
           <br />
           <div className="form-group">
-            <label htmlFor="price">Price</label>
+            <label htmlFor="price" className="mb-1 block text-sm font-medium text-gray-700">
+              Price
+            </label>
             <input
               onChange={handleChangePrice}
               type="number"
-              className="form-control"
+              className="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               name="price"
               id="price"
               value={price}
@@ -121,33 +127,20 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
           </div>
           <br />
           <div className="form-group">
-            <label htmlFor="courseImage">Image</label>
+            <label htmlFor="courseImage" className="mb-1 block text-sm font-medium text-gray-700">
+              Image
+            </label>
             <div
               onClick={handleImageClick}
-              style={{
-                cursor: "pointer",
-                width: 600,
-                height: 400,
-                overflow: "hidden",
-                borderRadius: "25px",
-                backgroundColor: "#ccc",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                margin: "1rem 0rem",
-              }}
+              className="my-4 flex aspect-[3/2] w-full cursor-pointer items-center justify-center overflow-hidden rounded-3xl bg-[#ccc] hover:ring hover:ring-indigo-500"
             >
               <img
+                className="h-full w-full object-cover"
                 src={
                   courseImage
                     ? URL.createObjectURL(courseImage)
-                    : "https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg"
+                    : 'https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg'
                 }
-                style={{
-                  objectFit: "cover",
-                  width: "100%",
-                  height: "100%",
-                }}
                 alt="courseImage"
               />
             </div>
@@ -156,15 +149,18 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
               id="courseImage"
               ref={fileInputRef}
               type="file"
-              style={{ display: "none" }}
+              className="hidden"
             />
-            <p style={{ fontSize: "0.8rem", color: "gray" }}>
+            <p style={{ fontSize: '0.8rem', color: 'gray' }}>
               対応ファイル形式：JPG・PNG（600×400px以上）
             </p>
           </div>
           <br />
-          <div className="form-group">
-            <button className="btn btn-primary btn-block" onClick={postCourse}>
+          <div>
+            <button
+              className="mx-auto w-full rounded bg-indigo-500 px-4 py-2 font-bold text-white transition duration-200 hover:bg-indigo-700"
+              onClick={postCourse}
+            >
               <span>Submit</span>
             </button>
           </div>
