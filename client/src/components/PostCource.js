@@ -126,7 +126,7 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
             />
           </div>
           <br />
-          <div className="form-group">
+          <div className="group relative">
             <label htmlFor="courseImage" className="mb-1 block text-sm font-medium text-gray-700">
               Image
             </label>
@@ -154,6 +154,22 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
             <p style={{ fontSize: '0.8rem', color: 'gray' }}>
               対応ファイル形式：JPG・PNG（600×400px以上）
             </p>
+            <div className="absolute bottom-12 right-4 rounded-full bg-white p-1 shadow group-hover:bg-indigo-100 group-hover:shadow-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-gray-600"
+                fill="none"
+                viewBox="3 0 20 20"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15.232 5.232l3.536 3.536M9 13h3l6-6a1.5 1.5 0 00-2.121-2.121l-6 6v3z"
+                />
+              </svg>
+            </div>
           </div>
           <br />
           <div>

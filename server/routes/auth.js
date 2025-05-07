@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const registerValidation = require("../validation").registerValidation;
 const loginValidation = require("../validation").loginValidation;
+const updateUserValidation = require("../validation").updateUserValidation;
 const User = require("../models").userModel;
 const jwt = require("jsonwebtoken");
 const { uploadProfile, uploadCourse } = require("../middleware/multer");
+const passport = require("passport");
 
 router.use((req, res, next) => {
   console.log("A request is coming in to /auth");
@@ -52,6 +54,7 @@ router.post("/register", uploadProfile.single("avatar"), async (req, res) => {
   }
 });
 
+//login
 router.post("/login", async (req, res) => {
   try {
     const { error } = loginValidation(req.body);
@@ -72,5 +75,46 @@ router.post("/login", async (req, res) => {
     return res.status(400).send(err);
   }
 });
+
+//update user
+router.patch(
+  "/update",
+  passport.authenticate("jwt", { session: false }),
+  uploadProfile.single("avatar"),
+  async (req, res) => {
+    try {
+      console.log("update user route is working");
+      const { error } = updateUserValidation(req.body);
+      if (error) return res.status(400).send(error.details[0].message);
+
+      const { userid } = req.params;
+
+      const update = {};
+      if (req.body.username) update.username = req.body.username;
+      if (req.body.password) {
+        update.password = await bcrypt.hash(req.body.password, 10);
+      }
+      if (req.file) {
+        const avatarUrl = req.file.path;
+        update.profileImage = avatarUrl;
+      }
+      const updateUser = await User.findOneAndUpdate(
+        { _id: userid },
+        { $set: update },
+        { new: true, runValidators: true }
+      );
+
+      res.status(200).send({
+        msg: "User has been updated successfully",
+        data: updateUser,
+      });
+    } catch (err) {
+      console.error("Update failed:", err);
+      res
+        .status(400)
+        .send({ msg: "User could not be updated", error: err.message });
+    }
+  }
+);
 
 module.exports = router;

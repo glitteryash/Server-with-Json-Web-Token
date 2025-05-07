@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AuthService from '../services/auth.service';
 import { useNavigate } from 'react-router-dom';
+import EditProfileModal from './EditProfileModal';
 
 const Profile = ({ currentUser, setCurrentUser }) => {
   let navigate = useNavigate();
@@ -14,11 +15,33 @@ const Profile = ({ currentUser, setCurrentUser }) => {
       setCurrentUser(user);
     }
   }, []);
+
+  const [isModalOpen, setModalOpen] = useState(false);
+
   return (
     <div className="container mx-auto mt-6 px-6 sm:px-6 lg:px-8">
       {currentUser && (
-        <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-md shadow-indigo-500/35">
+        <div className="relative mx-auto max-w-md rounded-2xl bg-white p-6 shadow-md shadow-indigo-500/35">
           <div className="flex flex-col items-center text-center">
+            <a href="/course" title="Edit Profile">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon icon-tabler icons-tabler-outline icon-tabler-edit absolute right-4 top-4 text-gray-500"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                <path d="M16 5l3 3" />
+              </svg>
+            </a>
             <div className="mb-4 flex h-[120px] w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gray-200 shadow-inner">
               <img
                 src={currentUser.profileImage}
@@ -56,6 +79,7 @@ const Profile = ({ currentUser, setCurrentUser }) => {
           </div>
         </div>
       )}
+      <EditProfileModal currentUser={currentUser} setCurrentUser={setCurrentUser} />
     </div>
   );
 };
