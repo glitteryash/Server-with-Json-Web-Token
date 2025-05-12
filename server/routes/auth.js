@@ -84,10 +84,9 @@ router.patch(
   async (req, res) => {
     try {
       console.log("update user route is working");
+      console.log("req.body", req.body);
       const { error } = updateUserValidation(req.body);
       if (error) return res.status(400).send(error.details[0].message);
-
-      const { userid } = req.params;
 
       const update = {};
       if (req.body.username) update.username = req.body.username;
@@ -104,6 +103,9 @@ router.patch(
         { new: true, runValidators: true }
       );
 
+      if (updateUser) {
+        console.log("User updated successfully:", updateUser);
+      }
       res.status(200).send({
         msg: "User has been updated successfully",
         data: updateUser,

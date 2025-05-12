@@ -31,18 +31,30 @@ class AuthService {
     return JSON.parse(localStorage.getItem('user'));
   }
 
-  updateUser(username, password, profileImage) {
+  updateUser(username, password, confirmPassword, file) {
+    let token;
+    if (localStorage.getItem('token')) {
+      token = localStorage.getItem('token');
+    } else {
+      token = '';
+    }
     const formData = new FormData();
     if (username) {
       formData.append('username', username);
     }
     if (password) {
       formData.append('password', password);
+      formData.append('confirmPassword', confirmPassword);
     }
-    if (profileImage) {
-      formData.append('avatar', profileImage);
+
+    if (file) {
+      formData.append('avatar', file);
     }
-    return axios.patch(`${API_URL}/update`, formData);
+    return axios.patch(`${API_URL}/update`, formData, {
+      headers: {
+        Authorization: token,
+      },
+    });
   }
 }
 
