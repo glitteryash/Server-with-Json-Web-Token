@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../services/auth.service';
 
-const Login = () => {
+const Login = ({currentUser, setCurrentUser}) => {
   const navigate = useNavigate();
   let [email, setEmail] = useState('');
   let [password, setPassword] = useState('');
@@ -30,6 +30,7 @@ const Login = () => {
             })
           );
           localStorage.setItem('token', response.data.token);
+          setCurrentUser(AuthService.getCurrentUser());
           window.alert('Login success! Redirect to the profile');
           navigate('/profile');
         }

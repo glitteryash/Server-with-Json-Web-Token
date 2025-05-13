@@ -45,7 +45,7 @@ const Profile = ({ currentUser, setCurrentUser }) => {
                 <path d="M16 5l3 3" />
               </svg>
             </button>
-            <div className="mb-4 flex h-[120px] w-[120px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-gray-200 shadow-inner">
+            <div className="mb-4 flex h-[120px] w-[120px] items-center justify-center overflow-hidden rounded-full bg-gray-200 shadow-inner">
               <img
                 src={currentUser.profileImage}
                 alt="Profile"

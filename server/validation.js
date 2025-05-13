@@ -34,16 +34,19 @@ const updateUserValidation = (data) => {
   const schema = Joi.object({
     username: Joi.string().min(2).max(50),
     password: Joi.string().min(6).max(1024),
-    confirmPassword: Joi.string()
-      .valid(Joi.ref("password"))
-      .required()
-      .messages({
+    confirmPassword: Joi.when("password", {
+      is: Joi.exist(),
+      then: Joi.string().valid(Joi.ref("password")).required().messages({
         "any.only": "パスワードが一致しません。",
       }),
-  }).messages({
-    "string.min": "{#label}は{#limit}文字以上です。",
-    "string.max": "{#label}は{#limit}文字以内です。",
-  });
+      otherwise: Joi.forbidden(),
+    }),
+  })
+    .messages({
+      "string.min": "{#label}は{#limit}文字以上です。",
+      "string.max": "{#label}は{#limit}文字以内です。",
+    })
+    .options({ stripUnknown: true });
   return schema.validate(data);
 };
 

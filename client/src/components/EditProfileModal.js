@@ -2,14 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import AuthService from '../services/auth.service';
 
 const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen }) => {
-  const [userName, setUserName] = useState(currentUser.username);
-  const [email, setEmail] = useState(currentUser.email);
+  const [userName, setUserName] = useState(currentUser?.username??null);
+  const [email, setEmail] = useState(currentUser?.email??null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [profileImage, setProfileImage] = useState(currentUser.profileImage);
+  const [profileImage, setProfileImage] = useState(currentUser?.profileImage??null);
   const [message, setMessage] = useState('');
   const [file, setFile] = useState(null);
-
   const fileInputRef = useRef(null);
 
   const handleChangeUserName = (e) => {
@@ -37,8 +36,19 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
   const handleSubmit = () => {
     AuthService.updateUser(userName, password, confirmPassword, file)
       .then((response) => {
+        const updateUser ={
+          email: response.data.data.email,
+          username: response.data.data.username,
+          _id: response.data.data._id,
+          role: response.data.data.role,
+          profileImage:response.data.data.profileImage,
+        }
+        localStorage.setItem('user',
+          JSON.stringify(updateUser));
+          setCurrentUser(updateUser);
         window.alert('Update Success');
         console.log('Update Success', response.data);
+        setModalOpen(false);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -48,14 +58,19 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
   };
 
   useEffect(() => {
-    if (profileImage) {
+    if (file) {
       return () => {
-        if (profileImage instanceof Blob) {
-          URL.revokeObjectURL(profileImage);
+        if (file instanceof Blob) {
+          URL.revokeObjectURL(file);
         }
       };
     }
-  }, [profileImage]);
+  }, [file]);
+  useEffect(() => {
+    if (currentUser?.profileImage) {
+      setProfileImage(currentUser.profileImage);
+    }
+  }, [currentUser?.profileImage]);
 
   if (!isOpen) return null;
   return (
@@ -176,11 +191,11 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
               />
             </div>
           )}
-          {password && confirmPassword && password !== confirmPassword && (
+          {/* {password && confirmPassword && password !== confirmPassword && (
             <div className="bg-red-100 text-red-500">
               <p className="text-center">Password is not the same</p>
             </div>
-          )}
+          )} */}
         </div>
         <button
           onClick={handleSubmit}

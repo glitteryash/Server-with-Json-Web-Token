@@ -6,6 +6,7 @@ const User = require("../models").userModel;
 const jwt = require("jsonwebtoken");
 const { uploadProfile, uploadCourse } = require("../middleware/multer");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
 
 router.use((req, res, next) => {
   console.log("A request is coming in to /auth");
@@ -84,9 +85,11 @@ router.patch(
   async (req, res) => {
     try {
       console.log("update user route is working");
-      console.log("req.body", req.body);
       const { error } = updateUserValidation(req.body);
-      if (error) return res.status(400).send(error.details[0].message);
+      if (error) {
+        console.log("OMG_error", error);
+        return res.status(400).send(error.details[0].message);
+      }
 
       const update = {};
       if (req.body.username) update.username = req.body.username;
@@ -97,8 +100,9 @@ router.patch(
         const avatarUrl = req.file.path;
         update.profileImage = avatarUrl;
       }
+
       const updateUser = await User.findOneAndUpdate(
-        { _id: userid },
+        req.user._id,
         { $set: update },
         { new: true, runValidators: true }
       );
