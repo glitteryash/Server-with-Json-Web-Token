@@ -2,14 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import AuthService from '../services/auth.service';
 
 const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen }) => {
-  const [userName, setUserName] = useState(currentUser?.username??null);
-  const [email, setEmail] = useState(currentUser?.email??null);
+  const [userName, setUserName] = useState(currentUser?.username ?? null);
+  const [email, setEmail] = useState(currentUser?.email ?? null);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [profileImage, setProfileImage] = useState(currentUser?.profileImage??null);
+  const [profileImage, setProfileImage] = useState(currentUser?.profileImage ?? null);
   const [message, setMessage] = useState('');
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleChangeUserName = (e) => {
     setUserName(e.target.value);
@@ -36,16 +37,15 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
   const handleSubmit = () => {
     AuthService.updateUser(userName, password, confirmPassword, file)
       .then((response) => {
-        const updateUser ={
+        const updateUser = {
           email: response.data.data.email,
           username: response.data.data.username,
           _id: response.data.data._id,
           role: response.data.data.role,
-          profileImage:response.data.data.profileImage,
-        }
-        localStorage.setItem('user',
-          JSON.stringify(updateUser));
-          setCurrentUser(updateUser);
+          profileImage: response.data.data.profileImage,
+        };
+        localStorage.setItem('user', JSON.stringify(updateUser));
+        setCurrentUser(updateUser);
         window.alert('Update Success');
         console.log('Update Success', response.data);
         setModalOpen(false);
@@ -57,20 +57,34 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
       });
   };
 
-  useEffect(() => {
-    if (file) {
-      return () => {
-        if (file instanceof Blob) {
-          URL.revokeObjectURL(file);
-        }
-      };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
     }
+  };
+
+  useEffect(() => {
+    if (!file) return;
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
   }, [file]);
+
   useEffect(() => {
     if (currentUser?.profileImage) {
       setProfileImage(currentUser.profileImage);
     }
   }, [currentUser?.profileImage]);
+
+  useEffect(() => {
+    if (isOpen) {
+      setMessage('');
+      setUserName(currentUser?.username ?? null);
+      setPassword('');
+      setConfirmPassword('');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
   return (
@@ -142,7 +156,7 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
           </svg>
           <img
             className="h-full w-full object-cover contrast-50 transition duration-300 hover:contrast-100"
-            src={file ? URL.createObjectURL(file) : profileImage}
+            src={file ? previewUrl : profileImage}
             alt="profileImage"
           />
           <input
@@ -163,6 +177,7 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
               type="text"
               value={userName}
               onChange={handleChangeUserName}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div className="grid grid-cols-[130px_1fr] items-center gap-2">
@@ -175,6 +190,7 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
               type="password"
               value={password}
               onChange={handleChangePassword}
+              onKeyDown={handleKeyDown}
             />
           </div>
           {password && (
@@ -188,6 +204,7 @@ const EditProfileModal = ({ currentUser, setCurrentUser, isOpen, setModalOpen })
                 type="password"
                 value={confirmPassword}
                 onChange={handleConfirmPassword}
+                onKeyDown={handleKeyDown}
               />
             </div>
           )}

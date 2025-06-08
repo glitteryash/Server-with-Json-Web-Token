@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import CourseService from "../services/course.service";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import CourseService from '../services/course.service';
 
 const Enroll = ({ currentUser, setCurrentUser }) => {
   const navigate = useNavigate();
-  let [searchInput, setSearchInput] = useState("");
+  let [searchInput, setSearchInput] = useState('');
   let [searchResult, setSearchResult] = useState(null);
   let [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
-      window.alert("Please login before enroll a new course");
-      navigate("/login");
-    } else if (currentUser.role !== "student") {
-      window.alert("Only students can enroll a new course");
-      navigate("/login");
+      window.alert('Please login before enroll a new course');
+      navigate('/login');
+    } else if (currentUser.role !== 'student') {
+      window.alert('Only students can enroll a new course');
+      navigate('/login');
     }
   }, [currentUser]);
 
@@ -36,7 +36,7 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
       });
   };
   let handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleSearch();
     }
@@ -46,8 +46,8 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
     CourseService.enroll(e.target.id, currentUser._id)
       .then((data) => {
         console.log(data);
-        window.alert("You have successfully enrolled in the course");
-        navigate("/course");
+        window.alert('You have successfully enrolled in the course');
+        navigate('/course');
       })
       .catch((error) => {
         console.error(error.response);
@@ -55,122 +55,63 @@ const Enroll = ({ currentUser, setCurrentUser }) => {
   };
 
   return (
-    <div style={{ padding: "3rem" }}>
-      {currentUser && currentUser.role == "student" && (
-        <div className="search input-group mb-3">
+    <div className="container mx-auto px-4">
+      {currentUser && currentUser.role == 'student' && (
+        <div className="my-40 flex w-full flex-col items-center justify-center gap-4">
           <input
             onChange={handleChangeInput}
             type="text"
-            className="form-control"
+            placeholder="Search for a course"
+            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 md:w-2/3"
             onKeyDown={handleKeyDown}
           />
-          <button onClick={handleSearch} className="btn btn-primary">
+          <button
+            onClick={handleSearch}
+            className="w-full rounded bg-indigo-500 px-4 py-2 text-white transition duration-200 hover:bg-indigo-700 md:w-1/3"
+          >
             Search
           </button>
         </div>
       )}
       {currentUser && searchResult && searchResult.length > 0 && (
-        <div>
-          <p>Data we got back from API.</p>
-          <div
-            style={{
-              maxWidth: "2000px",
-              margin: "0 auto",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-              gap: "1.5rem",
-            }}
-          >
+        <div className="container mx-auto">
+          {/* <p>Data we got back from API.</p> */}
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {searchResult.map((course) => (
               <div
                 key={course._id}
-                className="card"
-                style={{
-                  margin: "1rem 0rem",
-                }}
+                className="h-[580px] overflow-hidden rounded-lg border bg-white shadow-md"
               >
-                <div className="card-body" style={{ margin: "1rem" }}>
-                  <div
-                    style={{
-                      overflow: "hidden",
-                      width: "100%",
-                      height: "300px",
-                      borderRadius: "0px",
-                      backgroundColor: "#ccc",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    <img
-                      src={course.courseImage}
-                      style={{
-                        objectFit: "cover",
-                        width: "100%",
-                        height: "100%",
-                      }}
-                      alt=""
-                    />
-                  </div>
-                  <div
-                    style={{
-                      marginBottom: "1rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <h3 className="card-title">{course.title}</h3>
-                    <p
-                      className="card-text"
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        "-webkit-line-clamp": "3",
-                        "-webkit-box-orient": "vertical",
-                      }}
-                    >
+                <div className="h-[300px] w-full overflow-hidden bg-gray-300">
+                  <img
+                    src={course.courseImage}
+                    className="h-full w-full object-cover"
+                    alt="Course"
+                  />
+                </div>
+                <div className="flex h-[calc(100%-300px)] flex-col justify-around p-4">
+                  <p className="w-fit rounded border border-indigo-500 px-3 py-1 text-sm text-indigo-500">
+                    ${course.price}
+                  </p>
+                  <div className="mb-4">
+                    <h3 className="min-h-[3rem] text-lg font-bold text-gray-800">{course.title}</h3>
+                    <p className="text-md line-clamp-3 leading-relaxed text-gray-600">
                       {course.description}
                     </p>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                    }}
-                  >
-                    <p
-                      className="btn btn-outline-primary"
-                      style={{ cursor: "default", marginRight: "1rem" }}
-                    >
-                      ${course.price}
-                    </p>
-                    <p>人数 {course.students.length}</p>
+                  <div>
+                    <p className="text-sm text-gray-700">人数 {course.students.length}</p>
                   </div>
                   {course.students.includes(currentUser._id) ? ( //確認是否已經選課
-                    <p
-                      className="btn btn-outline-secondary"
-                      style={{
-                        display: "block",
-                        cursor: "default",
-                        margin: "0 auto",
-                        width: "100px",
-                      }}
-                    >
+                    <p className="mx-auto w-1/2 rounded-lg bg-gray-100 px-4 py-2 text-center text-sm text-gray-600">
                       購読済み
                     </p>
                   ) : (
                     <a
                       href="#"
                       onClick={handleEnroll}
-                      className="btn btn-primary"
+                      className="mx-auto w-1/3 rounded-lg bg-indigo-500 px-4 py-2 text-center text-white transition duration-200 hover:bg-indigo-700"
                       id={course._id}
-                      style={{
-                        display: "block",
-                        margin: "0 auto",
-                        width: "100px",
-                        // textAlign: "center",
-                      }}
                     >
                       Enroll
                     </a>

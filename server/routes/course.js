@@ -28,7 +28,7 @@ router.get("/instructor/:_instructor_id", async (req, res) => {
     let { _instructor_id } = req.params;
     let course = await Course.find({ instructor: _instructor_id }).populate(
       "instructor",
-      ["username", "email"]
+      ["username", "email", "profileImage"]
     );
     if (!course) {
       return res.status(404).send("Course not found");
@@ -59,9 +59,13 @@ router.get("/student/:_student_id", async (req, res) => {
 //搜尋課程
 router.get("/findbyname/:name", async (req, res) => {
   try {
+    function escapeRegExp(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
     let { name } = req.params;
+    let safeInput = escapeRegExp(name); //使用escapeRegExp函數來處理特殊字元
     let course = await Course.find({
-      title: { $regex: name, $options: "i" }, //模糊搜尋且不區分大小寫
+      title: { $regex: safeInput, $options: "i" }, //模糊搜尋且不區分大小寫
     }).populate("instructor", ["username", "email"]);
     if (course.length === 0) {
       return res.status(404).send("course not found");
@@ -84,6 +88,7 @@ router.get("/:_id", async (req, res) => {
       return res.status(404).send("Course not found");
     }
     res.status(200).send(course);
+    console.log("course", course);
   } catch (err) {
     res.status(500).send(err.message);
   }

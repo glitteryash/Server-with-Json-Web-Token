@@ -5,6 +5,7 @@ import CourseService from '../services/course.service';
 const Course = ({ currentUser, setCurrentUser }) => {
   let navigate = useNavigate();
   let [courseData, setCourseData] = useState(null);
+
   useEffect(() => {
     let _id;
     if (!currentUser) {
@@ -34,6 +35,7 @@ const Course = ({ currentUser, setCurrentUser }) => {
         });
     }
   }, [currentUser]);
+
   return (
     <div className="p-8">
       {currentUser && currentUser.role === 'instructor' && (
@@ -68,7 +70,8 @@ const Course = ({ currentUser, setCurrentUser }) => {
             {courseData.map((course) => (
               <div
                 key={course._id}
-                className="h-[580px] overflow-hidden rounded-lg border bg-white shadow-md"
+                onClick={() => navigate(`/course/${course._id}`)}
+                className="h-[580px] overflow-hidden rounded-lg border bg-white shadow-md shadow-indigo-500/35 hover:cursor-pointer"
               >
                 <div className="h-[300px] w-full overflow-hidden bg-gray-300">
                   <img
@@ -78,12 +81,12 @@ const Course = ({ currentUser, setCurrentUser }) => {
                   />
                 </div>
                 <div className="flex h-[calc(100%-300px)] flex-col justify-around p-4">
-                  <p className="w-fit rounded border border-blue-500 px-3 py-1 text-sm text-blue-500">
+                  <p className="w-fit rounded border border-indigo-500 px-3 py-1 text-sm text-indigo-500">
                     ${course.price}
                   </p>
                   <div className="mb-4">
                     <h3 className="min-h-[3rem] text-lg font-bold text-gray-800">{course.title}</h3>
-                    <p className="text-md line-clamp-3 leading-relaxed text-gray-600">
+                    <p className="text-md line-clamp-4 leading-relaxed text-gray-600">
                       {course.description}
                     </p>
                   </div>

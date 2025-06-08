@@ -10,6 +10,7 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
   let [courseImage, setCourseImage] = useState(null);
   let navigate = useNavigate();
   const fileInputRef = useRef(null);
+  let [file, setFile] = useState(null);
 
   useEffect(() => {
     if (!currentUser) {
@@ -22,18 +23,15 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
   }, [currentUser]);
 
   useEffect(() => {
-    // 如果 profileImage 有值（即圖片已選擇）
-    if (courseImage) {
-      // 在組件卸載或者 courseImage 改變時執行這個清理函式
-      return () => {
-        // 檢查 courseImage 是否是 Blob 物件
-        if (courseImage instanceof Blob) {
-          // 釋放之前創建的 Object URL
-          URL.revokeObjectURL(courseImage);
-        }
-      };
-    }
-  }, [courseImage]);
+    if (!file) return;
+    const objectUrl = URL.createObjectURL(file);
+    setCourseImage(objectUrl);
+
+    // 清理函式
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [file]);
 
   const handleChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -62,7 +60,8 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
   const handleChangeCourseImage = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setCourseImage(file);
+      setFile(file);
+      // setCourseImage(file);
     }
   };
 
@@ -137,12 +136,28 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
               <img
                 className="h-full w-full object-cover"
                 src={
-                  courseImage
-                    ? URL.createObjectURL(courseImage)
+                  file
+                    ? courseImage
                     : 'https://res.cloudinary.com/dt5ybgxgz/image/upload/v1744774225/image-1_2x_ejjbqe.jpg'
                 }
                 alt="courseImage"
               />
+              <div className="absolute bottom-12 right-4 rounded-full bg-white p-1 shadow hover:cursor-pointer group-hover:bg-indigo-100 group-hover:shadow-lg">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-600"
+                  fill="none"
+                  viewBox="3 0 20 20"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15.232 5.232l3.536 3.536M9 13h3l6-6a1.5 1.5 0 00-2.121-2.121l-6 6v3z"
+                  />
+                </svg>
+              </div>
             </div>
             <input
               onChange={handleChangeCourseImage}
@@ -154,22 +169,6 @@ const PostCourse = ({ currentUser, setCurrentUser }) => {
             <p style={{ fontSize: '0.8rem', color: 'gray' }}>
               対応ファイル形式：JPG・PNG（600×400px以上）
             </p>
-            <div className="absolute bottom-12 right-4 rounded-full bg-white p-1 shadow group-hover:bg-indigo-100 group-hover:shadow-lg">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-gray-600"
-                fill="none"
-                viewBox="3 0 20 20"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15.232 5.232l3.536 3.536M9 13h3l6-6a1.5 1.5 0 00-2.121-2.121l-6 6v3z"
-                />
-              </svg>
-            </div>
           </div>
           <br />
           <div>
