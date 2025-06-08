@@ -17,7 +17,7 @@ const Navbar = (props) => {
   };
 
   return (
-    <div>
+    <div className="sticky top-0 z-50 bg-white bg-white/65 backdrop-blur">
       <nav>
         <div className="bg-light px-10 py-6">
           <div className="container mx-auto flex flex-col items-center justify-between space-y-4 sm:flex-row sm:space-y-0">
